@@ -1,9 +1,9 @@
 services:
-  tutto.xhtml_renderer:
+  tutto_xhtml.renderer:
     class: Tutto\Bundle\XhtmlBundle\Logic\XhtmlRenderer
 
-  tutto.twig.xhtml_renderer:
+  tutto_xhtml.twig.renderer:
     class: Tutto\Bundle\XhtmlBundle\Twig\XhtmlRendererExtension
-    arguments: ["@tutto.xhtml_renderer"]
+    arguments: ["@tutto_xhtml.renderer"]
     tags:
       - { name: twig.extension }

@@ -43,7 +43,7 @@ class XhtmlRenderer implements XhtmlRendererInterface {
                 $value = implode(' ', $value);
             }
 
-            $xhtml = $name.'="'.$value.'"';
+            $xhtml.= $name.'="'.$value.'"';
         }
 
         return empty($xhtml) ? '' : ' '.$xhtml;

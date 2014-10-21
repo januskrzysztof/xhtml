@@ -2,6 +2,10 @@
 
 namespace Tutto\Bundle\XhtmlBundle\Xhtml;
 
+use Tutto\Bundle\UtilBundle\Logic\Attributes as BaseAttributes;
+use Tutto\Bundle\XhtmlBundle\Xhtml\Attributes;
+use LogicException;
+
 /**
  * Class AbstractTag
  * @package Tutto\Bundle\XhtmlBundle\Xhtml
@@ -18,9 +22,9 @@ abstract class AbstractTag {
     private $children = [];
 
     /**
-     * @var array
+     * @var Attributes
      */
-    private $attributes = [];
+    private $attributes;
 
     /**
      * @var AbstractTag|null
@@ -32,9 +36,9 @@ abstract class AbstractTag {
      * @param array $attributes
      * @param AbstractTag[] $children
      */
-    public function __construct($name, array $attributes = [], array $children = []) {
-        $this->name       = $name;
-        $this->attributes = $attributes;
+    public function __construct($name, $attributes = [], array $children = []) {
+        $this->setName($name);
+        $this->setAttributes($attributes);
 
         foreach ($children as $child) {
             $this->addChild($child);
@@ -66,99 +70,38 @@ abstract class AbstractTag {
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getName() {
         return $this->name;
     }
 
     /**
-     * @param mixed $name
+     * @param string $name
      */
     public function setName($name) {
-        $this->name = $name;
+        $this->name = (string) $name;
     }
 
     /**
-     * @param mixed $class
+     * @param array|Attributes|BaseAttributes $attributes
      */
-    public function addClass($class) {
-        $this->addAttribute('class', $class);
-    }
-
-    /**
-     * @param mixed $id
-     */
-    public function setId($id) {
-        $this->setAttribute('id', $id);
-    }
-
-    /**
-     * @param mixed $required
-     */
-    public function setRequired($required = true) {
-        if ((boolean) $required) {
-            $this->setAttribute('required', 'required');
+    public function setAttributes($attributes) {
+        if (is_array($attributes)) {
+            $this->attributes = new Attributes($attributes);
+        } elseif ($attributes instanceof Attributes) {
+            $this->attributes = $attributes;
+        } elseif ($attributes instanceof BaseAttributes) {
+            $this->attributes = new Attributes($attributes->getAttributes());
         } else {
-            $this->removeAttribute('required');
+            throw new LogicException('Attributes is not valid. Only array or Attributes instance.');
         }
     }
 
     /**
-     * @param array $attributes
-     */
-    public function setAttributes(array $attributes) {
-        foreach ($attributes as $name => $value) {
-            $this->setAttribute($name, $value);
-        }
-    }
-
-    /**
-     * @param string $name
-     * @param mixed $value
-     */
-    public function setAttribute($name, $value) {
-        $this->attributes[$name] = $value;
-    }
-
-    /**
-     * @param string $name
-     * @param mixed $value
-     */
-    public function addAttribute($name, $value) {
-        $this->attributes[$name][] = $value;
-    }
-
-    /**
-     * @return array
+     * @return Attributes
      */
     public function getAttributes() {
         return $this->attributes;
-    }
-
-    /**
-     * @param string $name
-     * @return bool
-     */
-    public function hasAttribute($name) {
-        return isset($this->attributes[$name]);
-    }
-
-    /**
-     * @param string $name
-     * @param null|mixed $default
-     * @return mixed
-     */
-    public function getAttribute($name, $default = null) {
-        return $this->hasAttribute($name) ? $this->attributes[$name] : $default;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function removeAttribute($name) {
-        if ($this->hasAttribute($name)) {
-            unset($this->attributes[$name]);
-        }
     }
 }

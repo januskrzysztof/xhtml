@@ -4,7 +4,7 @@
   "keywords": ["util"],
   "type": "symfony-bundle",
   "license": ["MIT"],
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "authors": [{
     "name": "Krzysztof Januś",
     "email": "fluke.kuczwa@gmail.com"

@@ -15,7 +15,7 @@ class Attributes extends BaseAttributes {
      * @param string|array $class
      */
     public function addClass($class) {
-        $this->addAttribute('class', (array) $class);
+        $this->addAttribute('class', $class);
     }
 
     /**
